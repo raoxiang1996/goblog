@@ -1,7 +1,11 @@
 package main
 
-import "goblog/routes"
+import (
+	"goblog/model"
+	"goblog/routes"
+)
 
 func main() {
+	model.InitDb()
 	routes.InitRouter()
 }

@@ -35,7 +35,7 @@ func LoadDataBase(file *ini.File) {
 	Db = file.Section("database").Key("Db").MustString("mysql")
 	Dbhost = file.Section("database").Key("Dbhost").MustString("localhost")
 	DbPort = file.Section("database").Key("DbPort").MustString("3306")
-	Dbuser = file.Section("database").Key("Dbuser").MustString("ginblog")
-	DbPassWord = file.Section("database").Key("DbPassWord").MustString("admin123456")
-	DbName = file.Section("database").Key("DbName").MustString("ginblog")
+	Dbuser = file.Section("database").Key("Dbuser").MustString("root")
+	DbPassWord = file.Section("database").Key("DbPassWord").MustString("raoxiang1995")
+	DbName = file.Section("database").Key("DbName").MustString("goblog")
 }
