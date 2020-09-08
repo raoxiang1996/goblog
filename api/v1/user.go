@@ -44,7 +44,17 @@ func AddUser(c *gin.Context) {
 
 // 删除用户
 func DeleteUser(c *gin.Context) {
-
+	id, _ := strconv.Atoi(c.Param("id"))
+	code := model.DeleteUser(id)
+	if code != errmsg.SUCCESS {
+		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
+			errmsg.GetErrMsg(code))
+		c.JSON(http.StatusBadRequest, error)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"message": errmsg.GetErrMsg(code),
+	})
 }
 
 // 查询单个用户
@@ -71,5 +81,20 @@ func GetUsers(c *gin.Context) {
 
 // 修改用户
 func UpdateUser(c *gin.Context) {
+	var data model.User
+	id, _ := strconv.Atoi(c.Param("id"))
+	c.ShouldBindJSON(&data)
+	code := model.CheckUser(data)
+	if code != errmsg.SUCCESS {
+		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
+			errmsg.GetErrMsg(code))
+		c.JSON(http.StatusBadRequest, error)
+		return
+	}
+	model.UpdateUser(id, &data)
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"message": errmsg.GetErrMsg(code),
+	})
 
 }

@@ -51,17 +51,39 @@ func GetUsers(pageSize int, pageNum int) []User {
 	return users
 }
 
-// 修改用户
-func UpdateUser() {
+// 删除用户
+func DeleteUser(id int) int {
+	var user User
+	err := db.Where("id = ?", id).Delete(&user).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCESS
+}
 
+// 修改用户
+func UpdateUser(id int, data *User) int {
+	var user User
+	maps := make(map[string]interface{})
+	maps["username"] = data.Username
+	maps["role"] = data.Role
+	err := db.Model(&user).Where("id = ?", id).Update(maps)
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCESS
 }
 
 // 密码加密
+func (u *User) BeforeSave() {
+	u.Password = ScrypyPw(u.Password)
+}
+
 func ScrypyPw(password string) string {
 	const KeyLen = 10
 	salt := make([]byte, 8)
 	salt = []byte{12, 32, 4, 6, 66, 11, 222, 11}
-	HashPw, err := scrypt.Key([]byte(password), salt, 11232, 8, 1, KeyLen)
+	HashPw, err := scrypt.Key([]byte(password), salt, 16384, 8, 1, KeyLen)
 	if err != nil {
 		log.Fatal(err)
 		return ""
