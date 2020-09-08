@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"goblog/model"
 	"goblog/utils/errmsg"
 	"net/http"
@@ -11,16 +10,10 @@ import (
 	_ "github.com/gin-gonic/gin"
 )
 
-// 查询用户是否存在
-func UserIsExist() {
-
-}
-
 // 添加用户
 func AddUser(c *gin.Context) {
 	var data model.User
 	if err := c.ShouldBindJSON(&data); err != nil {
-		fmt.Printf(err.Error())
 		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
 			errmsg.GetErrMsg(errmsg.PARSEBODYFAIL))
 		c.JSON(http.StatusBadRequest, error)
@@ -31,9 +24,10 @@ func AddUser(c *gin.Context) {
 	if code == errmsg.SUCCESS {
 		model.CreateUser(&data)
 	} else {
-		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
+		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
 			errmsg.GetErrMsg(code))
 		c.JSON(http.StatusBadRequest, error)
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
@@ -47,7 +41,7 @@ func DeleteUser(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	code := model.DeleteUser(id)
 	if code != errmsg.SUCCESS {
-		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
+		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
 			errmsg.GetErrMsg(code))
 		c.JSON(http.StatusBadRequest, error)
 	}
@@ -86,7 +80,7 @@ func UpdateUser(c *gin.Context) {
 	c.ShouldBindJSON(&data)
 	code := model.CheckUser(data)
 	if code != errmsg.SUCCESS {
-		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
+		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
 			errmsg.GetErrMsg(code))
 		c.JSON(http.StatusBadRequest, error)
 		return

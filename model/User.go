@@ -18,15 +18,16 @@ type User struct {
 }
 
 // 查询用户是否存在
-func CheckUser(user User) int {
-	if user.Username == "" {
+func CheckUser(data User) int {
+	if data.Username == "" {
 		return errmsg.ERROR_UERNAME_EMPTY
 	}
-	if user.Password == "" {
+	if data.Password == "" {
 		return errmsg.ERROR_PASSWORD_EMPTY
 	}
-	db.Select("id").Where("username = ?", user.Username).First(&user)
-	if user.ID > 0 {
+	var user User
+	db.Select("id").Where("username = ?", data.Username).First(&user)
+	if data.ID > 0 {
 		return errmsg.ERROR_UERNAME_USED
 	}
 	return errmsg.SUCCESS
@@ -44,7 +45,7 @@ func CreateUser(data *User) int {
 // 查询用户列表
 func GetUsers(pageSize int, pageNum int) []User {
 	var users []User
-	err := db.Limit(pageNum).Offset((pageNum - 1) * pageSize).Find(&users).Error
+	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil
 	}

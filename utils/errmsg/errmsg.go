@@ -24,7 +24,9 @@ const (
 	// code 2000 文章模块错误
 
 	// code 3000 分类模块错误
-
+	ERROR_CATEGORY_USED      = 3001
+	ERROR_CATEGORY_EMPTY     = 3002
+	ERROR_CATEGORY_NOT_EXIST = 3003
 	// code 4000 评论模块错误
 
 )
@@ -43,6 +45,10 @@ var codemsg = map[int]string{
 	ERROR_TOKEN_RUNTIME:    "TOKEN已过期",
 	ERROR_TOKEN_WRONG:      "TOKEN不正确",
 	ERROR_TOKEN_TYPE_WRONG: "TOKEN格式不正确",
+
+	ERROR_CATEGORY_USED:      "分类名已使用",
+	ERROR_CATEGORY_EMPTY:     "分类名为空",
+	ERROR_CATEGORY_NOT_EXIST: "分类不存在",
 }
 
 func GetErrMsg(code int) string {
