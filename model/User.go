@@ -1,7 +1,11 @@
 package model
 
 import (
+	"encoding/base64"
 	"goblog/utils/errmsg"
+	"log"
+
+	"golang.org/x/crypto/scrypt"
 
 	"github.com/jinzhu/gorm"
 )
@@ -50,4 +54,18 @@ func GetUsers(pageSize int, pageNum int) []User {
 // 修改用户
 func UpdateUser() {
 
+}
+
+// 密码加密
+func ScrypyPw(password string) string {
+	const KeyLen = 10
+	salt := make([]byte, 8)
+	salt = []byte{12, 32, 4, 6, 66, 11, 222, 11}
+	HashPw, err := scrypt.Key([]byte(password), salt, 11232, 8, 1, KeyLen)
+	if err != nil {
+		log.Fatal(err)
+		return ""
+	}
+	fpw := base64.StdEncoding.EncodeToString(HashPw)
+	return fpw
 }
