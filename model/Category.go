@@ -17,9 +17,9 @@ func CheckCategory(data Category) int {
 		return errmsg.ERROR_CATEGORY_EMPTY
 	}
 
-	var cate Category
-	db.Select("id").Where("name = ?", data.Name).First(&cate)
-	if cate.ID > 0 {
+	var category Category
+	db.Select("id").Where("name = ?", data.Name).First(&category)
+	if category.ID > 0 {
 		return errmsg.ERROR_CATEGORY_USED
 	}
 	return errmsg.SUCCESS
@@ -35,13 +35,13 @@ func CreateCategory(data *Category) int {
 }
 
 // 查询分类列表
-func GetCategory(pageSize int, pageNum int) []Category {
-	var category []Category
-	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&category).Error
+func GetCategory(pageSize int, pageNum int) ([]Category, int) {
+	var categoryList []Category
+	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&categoryList).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil
+		return nil, errmsg.ERROR_CATEGORY_FAIL
 	}
-	return category
+	return categoryList, errmsg.SUCCESS
 }
 
 // 删除分类

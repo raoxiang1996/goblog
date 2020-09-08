@@ -34,6 +34,7 @@ func DeleteArticle(c *gin.Context) {
 		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
 			errmsg.GetErrMsg(code))
 		c.JSON(http.StatusBadRequest, error)
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
@@ -42,6 +43,46 @@ func DeleteArticle(c *gin.Context) {
 }
 
 // 查询单个文章
+func GetArticleInfo(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	article, code := model.GetArticleInfo(id)
+	if code != errmsg.SUCCESS {
+		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
+			errmsg.GetErrMsg(code))
+		c.JSON(http.StatusBadRequest, error)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"data":    article,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
+// 查询分类下所有文章
+func GetCateArticle(c *gin.Context) {
+	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
+	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
+	id, _ := strconv.Atoi(c.Param("id"))
+	if pageSize == 0 {
+		pageSize = -1
+	}
+	if pageNum == 0 {
+		pageNum = -1
+	}
+	data, code := model.GetCateArticle(id, pageSize, pageNum)
+	if code != errmsg.SUCCESS {
+		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
+			errmsg.GetErrMsg(code))
+		c.JSON(http.StatusBadRequest, error)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"data":    data,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
 
 // 查询文章列表
 func GetArticle(c *gin.Context) {
@@ -53,8 +94,13 @@ func GetArticle(c *gin.Context) {
 	if pageNum == 0 {
 		pageNum = -1
 	}
-	data := model.GetArticle(pageSize, pageNum)
-	code := errmsg.SUCCESS
+	data, code := model.GetArticle(pageSize, pageNum)
+	if code != errmsg.SUCCESS {
+		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
+			errmsg.GetErrMsg(code))
+		c.JSON(http.StatusBadRequest, error)
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
@@ -68,6 +114,12 @@ func UpdateArticle(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	c.ShouldBindJSON(&data)
 	code := model.UpdateArticle(id, &data)
+	if code != errmsg.SUCCESS {
+		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
+			errmsg.GetErrMsg(code))
+		c.JSON(http.StatusBadRequest, error)
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"message": errmsg.GetErrMsg(code),

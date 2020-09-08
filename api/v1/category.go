@@ -44,6 +44,7 @@ func DeleteCategory(c *gin.Context) {
 		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
 			errmsg.GetErrMsg(code))
 		c.JSON(http.StatusBadRequest, error)
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
@@ -64,8 +65,13 @@ func GetCategory(c *gin.Context) {
 	if pageNum == 0 {
 		pageNum = -1
 	}
-	data := model.GetCategory(pageSize, pageNum)
-	code := errmsg.SUCCESS
+	data, code := model.GetCategory(pageSize, pageNum)
+	if code != errmsg.SUCCESS {
+		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
+			errmsg.GetErrMsg(code))
+		c.JSON(http.StatusBadRequest, error)
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,

@@ -44,6 +44,7 @@ func DeleteUser(c *gin.Context) {
 		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
 			errmsg.GetErrMsg(code))
 		c.JSON(http.StatusBadRequest, error)
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
