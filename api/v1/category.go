@@ -10,7 +10,7 @@ import (
 	"goblog/utils/errmsg"
 )
 
-// 添加用户
+// 添加分类
 func AddCategory(c *gin.Context) {
 	var data model.Category
 	if err := c.ShouldBindJSON(&data); err != nil {
@@ -36,7 +36,7 @@ func AddCategory(c *gin.Context) {
 	})
 }
 
-// 删除用户
+// 删除分类
 func DeleteCategory(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	code := model.DeleteCategory(id)
@@ -51,9 +51,9 @@ func DeleteCategory(c *gin.Context) {
 	})
 }
 
-// 查询单个用户
+// 查询单个分类
 
-// 查询用户列表
+// 查询分类列表
 func GetCategory(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
@@ -73,7 +73,7 @@ func GetCategory(c *gin.Context) {
 	})
 }
 
-// 修改用户
+// 修改分类
 func UpdateCategory(c *gin.Context) {
 	var data model.Category
 	id, _ := strconv.Atoi(c.Param("id"))
@@ -90,5 +90,4 @@ func UpdateCategory(c *gin.Context) {
 		"status":  code,
 		"message": errmsg.GetErrMsg(code),
 	})
-
 }
