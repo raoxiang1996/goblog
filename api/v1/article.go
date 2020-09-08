@@ -29,7 +29,7 @@ func AddArticle(c *gin.Context) {
 // 删除文章
 func DeleteArticle(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	code := model.DeleteCategory(id)
+	code := model.DeleteArticle(id)
 	if code != errmsg.SUCCESS {
 		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
 			errmsg.GetErrMsg(code))
