@@ -16,27 +16,27 @@ var JwtKey = []byte(utils.JwtKey)
 
 type MyClaims struct {
 	Username string `json:"username"`
-	Passwrod string `json:"passwrod"`
 	jwt.StandardClaims
 }
 
 // 生成token
-func setToken(username string, password string) (string, int) {
+func SetToken(username string) (string, int) {
 	expireTime := time.Now().Add(10 * time.Hour)
-	setClaims := MyClaims{
+	SetClaims := MyClaims{
 		username,
-		password,
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
-			Issuer:    "goblog",
+			Issuer:    "ginblog",
 		},
 	}
-	reqClaims := jwt.NewWithClaims(jwt.SigningMethodES256, setClaims)
-	token, err := reqClaims.SignedString(JwtKey)
+
+	reqClaim := jwt.NewWithClaims(jwt.SigningMethodHS256, SetClaims)
+	token, err := reqClaim.SignedString(JwtKey)
 	if err != nil {
 		return "", errmsg.ERROR
 	}
 	return token, errmsg.SUCCESS
+
 }
 
 // 验证token
