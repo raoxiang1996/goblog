@@ -1,8 +1,9 @@
 package model
 
 import (
-	"github.com/jinzhu/gorm"
 	"goblog/utils/errmsg"
+
+	"github.com/jinzhu/gorm"
 )
 
 type Article struct {

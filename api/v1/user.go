@@ -3,6 +3,7 @@ package v1
 import (
 	"goblog/model"
 	"goblog/utils/errmsg"
+	"goblog/utils/validator"
 	"net/http"
 	"strconv"
 
@@ -19,8 +20,14 @@ func AddUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, error)
 		return
 	}
-
-	code := model.CheckUser(data)
+	msg, code := validator.Validate(&data)
+	if code != errmsg.SUCCESS {
+		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
+			msg)
+		c.JSON(http.StatusBadRequest, error)
+		return
+	}
+	code = model.CheckUser(data)
 	if code == errmsg.SUCCESS {
 		model.CreateUser(&data)
 	} else {
