@@ -74,6 +74,7 @@ func JwtToken() gin.HandlerFunc {
 			error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
 				errmsg.GetErrMsg(errmsg.ERROR_TOKEN_NOT_EXIST))
 			c.JSON(http.StatusBadRequest, error)
+			c.Abort()
 			return
 		}
 		checkToken := strings.Split(tokenHeader, " ")
@@ -81,6 +82,7 @@ func JwtToken() gin.HandlerFunc {
 			error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
 				errmsg.GetErrMsg(errmsg.ERROR_TOKEN_TYPE_WRONG))
 			c.JSON(http.StatusBadRequest, error)
+			c.Abort()
 			return
 		}
 
@@ -88,6 +90,7 @@ func JwtToken() gin.HandlerFunc {
 			error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
 				errmsg.GetErrMsg(errmsg.ERROR_TOKEN_TYPE_WRONG))
 			c.JSON(http.StatusBadRequest, error)
+			c.Abort()
 			return
 		}
 		key, tCode := CheckToken(checkToken[1])
@@ -95,6 +98,7 @@ func JwtToken() gin.HandlerFunc {
 			error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
 				errmsg.GetErrMsg(tCode))
 			c.JSON(http.StatusBadRequest, error)
+			c.Abort()
 			return
 		}
 		c.Set("username", key)

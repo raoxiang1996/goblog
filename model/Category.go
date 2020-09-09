@@ -39,7 +39,7 @@ func GetCategory(pageSize int, pageNum int) ([]Category, int) {
 	var categoryList []Category
 	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&categoryList).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, errmsg.ERROR_CATEGORY_FAIL
+		return nil, errmsg.ERROR_GET_CATEGORY_FAIL
 	}
 	return categoryList, errmsg.SUCCESS
 }
