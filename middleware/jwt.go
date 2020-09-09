@@ -69,7 +69,6 @@ func CheckToken(token string) (*MyClaims, int) {
 // jwt中间件
 func JwtToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var code int
 		tokenHeader := c.Request.Header.Get("Authorization")
 		if tokenHeader == "" {
 			error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
@@ -82,27 +81,20 @@ func JwtToken() gin.HandlerFunc {
 			error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
 				errmsg.GetErrMsg(errmsg.ERROR_TOKEN_TYPE_WRONG))
 			c.JSON(http.StatusBadRequest, error)
-			c.Abort()
 			return
 		}
 
 		if len(checkToken) != 2 && checkToken[0] != "Bearer" {
-			code = errmsg.ERROR_TOKEN_TYPE_WRONG
-			c.JSON(http.StatusOK, gin.H{
-				"code":    code,
-				"message": errmsg.GetErrMsg(code),
-			})
-			c.Abort()
+			error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
+				errmsg.GetErrMsg(errmsg.ERROR_TOKEN_TYPE_WRONG))
+			c.JSON(http.StatusBadRequest, error)
 			return
 		}
 		key, tCode := CheckToken(checkToken[1])
 		if tCode != errmsg.SUCCESS {
-			code = tCode
-			c.JSON(http.StatusOK, gin.H{
-				"code":    code,
-				"message": errmsg.GetErrMsg(code),
-			})
-			c.Abort()
+			error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, http.StatusBadRequest,
+				errmsg.GetErrMsg(tCode))
+			c.JSON(http.StatusBadRequest, error)
 			return
 		}
 		c.Set("username", key)
