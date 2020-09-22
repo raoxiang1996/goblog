@@ -2,12 +2,12 @@ package model
 
 import (
 	"encoding/base64"
-	"goblog/utils/errmsg"
 	"log"
 
+	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/scrypt"
 
-	"github.com/jinzhu/gorm"
+	"goblog/utils/errmsg"
 )
 
 type User struct {

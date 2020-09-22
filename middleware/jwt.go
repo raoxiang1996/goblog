@@ -1,15 +1,15 @@
 package middleware
 
 import (
-	"goblog/utils"
-	"goblog/utils/errmsg"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 
-	"github.com/dgrijalva/jwt-go"
+	"goblog/utils"
+	"goblog/utils/errmsg"
 )
 
 var JwtKey = []byte(utils.JwtKey)

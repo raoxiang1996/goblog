@@ -2,10 +2,12 @@ package model
 
 import (
 	"fmt"
+	"time"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
+
 	"goblog/utils"
-	"time"
 )
 
 var db *gorm.DB

@@ -1,14 +1,15 @@
 package v1
 
 import (
-	"goblog/model"
-	"goblog/utils/errmsg"
-	"goblog/utils/validator"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/gin-gonic/gin"
+
+	"goblog/model"
+	"goblog/utils/errmsg"
+	"goblog/utils/validator"
 )
 
 // 添加用户

@@ -1,12 +1,13 @@
 package v1
 
 import (
-	"goblog/middleware"
-	"goblog/model"
-	"goblog/utils/errmsg"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"goblog/middleware"
+	"goblog/model"
+	"goblog/utils/errmsg"
 )
 
 func Login(c *gin.Context) {
