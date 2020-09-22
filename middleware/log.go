@@ -6,30 +6,33 @@ import (
 	"os"
 	"time"
 
-	"github.com/rifflock/lfshook"
-
 	"github.com/gin-gonic/gin"
-	rotalog "github.com/lestrrat-go/file-rotatelogs"
-	_ "github.com/rifflock/lfshook"
+	retalog "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 )
 
-func Logger() gin.HandlerFunc {
-	filePath := "log/blog.log"
-	linkName := "latest_log.log"
-	src, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0755)
+func Log() gin.HandlerFunc {
+	filePath := "log/log"
+	//linkName := "latest_log.log"
+
+	scr, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("err:", err)
 	}
 	logger := logrus.New()
-	logger.Out = src
+
+	logger.Out = scr
+
 	logger.SetLevel(logrus.DebugLevel)
-	logWriter, _ := rotalog.New(
+
+	logWriter, _ := retalog.New(
 		filePath+"%Y%m%d.log",
-		rotalog.WithMaxAge(7*24*time.Hour),
-		rotalog.WithRotationTime(7*24*time.Hour),
-		rotalog.WithLinkName(linkName),
+		retalog.WithMaxAge(7*24*time.Hour),
+		retalog.WithRotationTime(24*time.Hour),
+		//retalog.WithLinkName(linkName),
 	)
+
 	writeMap := lfshook.WriterMap{
 		logrus.InfoLevel:  logWriter,
 		logrus.FatalLevel: logWriter,
@@ -41,7 +44,9 @@ func Logger() gin.HandlerFunc {
 	Hook := lfshook.NewHook(writeMap, &logrus.TextFormatter{
 		TimestampFormat: "2006-01-02 15:04:05",
 	})
+
 	logger.AddHook(Hook)
+
 	return func(c *gin.Context) {
 		startTime := time.Now()
 		c.Next()
@@ -58,18 +63,18 @@ func Logger() gin.HandlerFunc {
 		if dataSize < 0 {
 			dataSize = 0
 		}
-
 		method := c.Request.Method
 		path := c.Request.RequestURI
+
 		entry := logger.WithFields(logrus.Fields{
-			"host":      hostName,
+			"HostName":  hostName,
 			"status":    statusCode,
-			"spendtime": spendTime,
-			"IP":        clientIp,
-			"method":    method,
-			"url":       path,
-			"datasize":  dataSize,
-			"agent":     userAgent,
+			"SpendTime": spendTime,
+			"Ip":        clientIp,
+			"Method":    method,
+			"Path":      path,
+			"DataSize":  dataSize,
+			"Agent":     userAgent,
 		})
 		if len(c.Errors) > 0 {
 			entry.Error(c.Errors.ByType(gin.ErrorTypePrivate).String())
