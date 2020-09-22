@@ -2,13 +2,14 @@ package validator
 
 import (
 	"fmt"
-	"goblog/utils/errmsg"
 	"reflect"
 
 	"github.com/go-playground/locales/zh_Hans_CN"
 	unTrans "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	zhTrans "github.com/go-playground/validator/v10/translations/zh"
+
+	"goblog/utils/errmsg"
 )
 
 func Validate(data interface{}) (string, int) {
