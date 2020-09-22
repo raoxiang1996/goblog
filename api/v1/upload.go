@@ -15,7 +15,12 @@ func UpLoad(c *gin.Context) {
 	fileSize := fileHeader.Size
 
 	url, code := model.UpLoadFile(file, fileSize)
-
+	if code != errmsg.SUCCESS {
+		error := errmsg.SetErrorResponse(c.Request.Method, c.Request.URL.Path, code,
+			errmsg.GetErrMsg(code))
+		c.JSON(http.StatusBadRequest, error)
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"message": errmsg.GetErrMsg(code),
